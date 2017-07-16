@@ -1,0 +1,29 @@
+title:
+description:
+classification:
+keywords:
+severity:
+links:
+bug:
+  phase:
+  specificity:
+  architectural-location:
+  application:
+  task:
+  subsystem:
+  package:
+  language:
+  detected-by:
+  reported-by:
+  issue:
+  time-reported:
+  reproducibility:
+  trace:
+fix:
+  repo:
+  hash:
+  pull-request:
+  license:
+  fix-in:
+  language:
+  time:
