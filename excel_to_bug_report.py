@@ -21,6 +21,7 @@ def processExcel(workbookInput):
 # Done this way since we don't have the sheet in correct format. Can be easily
 # improved after we have it nicely formated.
 def reportBugs(formatedData):
+    cellNotPopulated = 'Cell Not Populated'
     for commit in formatedData:
         with open('bugs/{}.bug'.format(formatedData[commit][11]), 'a') as bugReport:
             bugReport.write('title: {}\n\n'.format(formatedData[commit][0]))
@@ -32,23 +33,23 @@ def reportBugs(formatedData):
             bugReport.write('bug: \n\n')
             bugReport.write('  phase: {}\n\n'.format(formatedData[commit][5]))
             bugReport.write('  specifity: {}\n\n'.format(formatedData[commit][6]))
-            bugReport.write('  architectural-location: {}\n\n'.format(formatedData[commit][11]))
-            bugReport.write('  application{}\n\n'.format(formatedData[commit][11]))
-            bugReport.write('  task: {}\n\n'.format(formatedData[commit][11]))
-            bugReport.write('  subsystem: {}\n\n'.format(formatedData[commit][11]))
-            bugReport.write('  package: {}\n\n'.format(formatedData[commit][11]))
+            bugReport.write('  architectural-location: {}\n\n'.format(cellNotPopulated)) # Using empty cell
+            bugReport.write('  application{}\n\n'.format(cellNotPopulated)) # Using empty cell
+            bugReport.write('  task: {}\n\n'.format(cellNotPopulated)) # Using empty cell
+            bugReport.write('  subsystem: {}\n\n'.format(cellNotPopulated)) # Using empty cell
+            bugReport.write('  package: {}\n\n'.format(cellNotPopulated)) # Using empty cell
             bugReport.write('  language: {}\n\n'.format(formatedData[commit][14]))
             bugReport.write('  detected-by: {}\n\n'.format(formatedData[commit][7]))
             bugReport.write('  reported-by: {}\n\n'.format(formatedData[commit][8]))
             bugReport.write('  isssue: {}\n\n'.format(formatedData[commit][9]))
             bugReport.write('  time-reported: {}\n\n'.format(formatedData[commit][10]))
-            bugReport.write('  reproducibility: {}\n\n'.format(formatedData[commit][11]))
-            bugReport.write('  trace: {}\n\n'.format(formatedData[commit][11]))
+            bugReport.write('  reproducibility: {}\n\n'.format(cellNotPopulated))
+            bugReport.write('  trace: {}\n\n'.format(cellNotPopulated)) # Using empty cell
             bugReport.write('fix: \n\n')
-            bugReport.write('  repo: {}\n\n'.format(formatedData[commit][11]))
+            bugReport.write('  repo: {}\n\n'.format(cellNotPopulated)) # Using empty cell
             bugReport.write('  hash: {}\n\n'.format(formatedData[commit][11]))
             bugReport.write('  pull-request: {}\n\n'.format(formatedData[commit][12]))
-            bugReport.write('  license: {}\n\n'.format(formatedData[commit][11]))
+            bugReport.write('  license: {}\n\n'.format(cellNotPopulated)) # Using empty cell
             bugReport.write('  fix-in: {}\n\n'.format(formatedData[commit][13]))
             bugReport.write('  language: {}\n\n'.format(formatedData[commit][14]))
             bugReport.write('  time: {}\n\n'.format(formatedData[commit][15]))
