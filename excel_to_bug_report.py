@@ -29,4 +29,4 @@ if __name__ == '__main__':
         sys.exit()
 
     print ('Processing ods file: {}'.format(input_file))
-    processOds(xlrd.open_workbook(input_file))
+    processExcel(xlrd.open_workbook(input_file))
