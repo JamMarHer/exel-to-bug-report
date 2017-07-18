@@ -17,7 +17,6 @@ def processExcel(workbookInput):
     reportBugs(formatedData)
 
 
-
 def reportBugs(formatedData):
     with open ('format', 'r') as input_format:
         _format = input_format.readlines()
@@ -25,7 +24,6 @@ def reportBugs(formatedData):
         count = 0
         with open('bugs/{}.bug'.format(formatedData[commit][21][0:6]), 'a') as bugReport:
             for line in _format:
-
                 if 'bug:' in line:
                     bugReport.write('bug: \n')
                     continue
@@ -39,8 +37,6 @@ def reportBugs(formatedData):
                 count += 1
             count = 0
     print ('Done.')
-
-
 
 
 if __name__ == '__main__':
