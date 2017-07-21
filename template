@@ -1,6 +1,8 @@
 title: __TITLE__
 description:
+
 __DESCRIPTION__
+
 classification: __CLASSIFICATION__
 keywords: __KEYWORDS__
 severity: __SEVERITY__
@@ -11,11 +13,11 @@ bug:
 
   phase: __PHASE__
   specificity: __SPECIFICITY__
-  architectural-location: __ARCH_LOCATION__
+  architectural-location: N/A
   application: N/A
   task: N/A
   subsystem: N/A
-  package: N/A
+  package: mavlink/mavros
   languages: __LANGUAGES__
   detected-by: __DETECTED_BY__
   reported-by: __REPORTED_BY__

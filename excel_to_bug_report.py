@@ -4,49 +4,84 @@ import os
 import xlrd
 import json
 
+kIndentLength = 2
+kIndent = {
+    'title': 0,
+    'description': 1,
+    'classification': 0,
+    'keywords': 0,
+    'severity': 0,
+    'links': 1,
+    'phase': 0,
+    'specificity': 0,
+    'languages': 0,
+    'detected_by': 0,
+    'reported_by': 0,
+    'issue': 0,
+    'time_reported': 0,
+    'hash': 0,
+    'pull_request': 0,
+    'files': 2,
+    'time_fixed': 0
+}
+
+
+def indent(s, size):
+    indent = size * ' '
+    return ''.join(indent+line for line in s.splitlines(True))
+
+
 def processExcel(workbookInput):
     sheet = workbookInput.sheet_by_index(0)
     numColumns = sheet.ncols
-    numRows   = sheet.nrows
+    numRows = sheet.nrows
     print('Columns: {}; Rows: {}'.format(numColumns, numRows))
 
-    # CT: why are we storing in a hash map based on the commit link?
-    formattedData = {}
+    bugs = []
     for row in range(numRows):
-        commit = sheet.cell_value(rowx=row, colx=0)
-        formattedData[commit] = []
-        for col in range(1, numColumns):
-            formattedData[commit].append(sheet.cell_value(rowx=row, colx=col))
-    reportBugs(formattedData)
+        bug = {
+            'title': sheet.cell_value(rowx=row, colx=1),
+            'description': sheet.cell_value(rowx=row, colx=2),
+            'classification': sheet.cell_value(rowx=row, colx=3),
+            'keywords': sheet.cell_value(rowx=row, colx=4),
+            'severity': sheet.cell_value(rowx=row, colx=5),
+            'links': sheet.cell_value(rowx=row, colx=6),
+            'phase': sheet.cell_value(rowx=row, colx=7),
+            'specificity': sheet.cell_value(rowx=row, colx=8),
+            'languages': sheet.cell_value(rowx=row, colx=9).split('\n'),
+            'detected_by': sheet.cell_value(rowx=row, colx=10),
+            'reported_by': sheet.cell_value(rowx=row, colx=11),
+            'issue': sheet.cell_value(rowx=row, colx=12),
+            'time_reported': sheet.cell_value(rowx=row, colx=13),
+            'hash': sheet.cell_value(rowx=row, colx=14),
+            'pull_request': sheet.cell_value(rowx=row, colx=15),
+            'files': sheet.cell_value(rowx=row, colx=16).split('\n'),
+            'time_fixed': sheet.cell_value(rowx=row, colx=17)
+        }
+        if bug['title'] != '':
+            bugs.append(bug)
+    reportBugs(bugs)
 
 
-def reportBugs(formattedData):
-    with open ('format', 'r') as f:
-        # why _format?
-        _format = [l.strip('\n') for l in f]
+def reportBugs(bugs):
+    with open('template', 'r') as f:
+        template = f.read()
 
-    for commit in formattedData:
-        count = 0
-        short_hash = formattedData[commit][21][0:6]
-        print(commit)
-        with open('bugs/{}.bug'.format(short_hash), 'w') as bugReport:
-            for line in _format:
-                if 'bug:' in line:
-                    bugReport.write('bug:\n')
-                    continue
-                if 'fix:' in line:
-                    bugReport.write('fix:\n')
-                    continue
+    for bug in bugs:
+        report = template
+        for (k, v) in bug.items():
+            if k == 'languages':
+                v = ','.join(v)
+            elif k == 'files':
+                v = '\n'.join(v)
 
-                # CT: why lineToWrite and line?
-                line = '{} {}\n\n'.format(line, formattedData[commit][count])
-                bugReport.write(line)
-                count += 1 # use enumerate?
+            # indent
+            if kIndent[k] > 0:
+                v = indent(v, kIndent[k] * kIndentLength)
 
-            # why? this is dead code
-            count = 0
+            report = report.replace('__{}__'.format(k.upper()), v)
 
-    print('Done.')
+        print(report)
 
 
 if __name__ == '__main__':
