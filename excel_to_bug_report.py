@@ -8,7 +8,7 @@ def processExcel(workbookInput):
     sheet = workbookInput.sheet_by_index(0)
     numColumns = sheet.ncols
     numRows   = sheet.nrows
-    print ('Columns: {}; Rows: {}'.format(numColumns, numRows))
+    print('Columns: {}; Rows: {}'.format(numColumns, numRows))
     formattedData = {}
     for row in range(numRows):
         commit = sheet.cell_value(rowx=row, colx=0)
@@ -37,17 +37,18 @@ def reportBugs(formattedData):
                 bugReport.write('\n\n')
                 count += 1
             count = 0
-    print ('Done.')
+    print('Done.')
 
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print ('Please provide an ods file to process.')
+        # CT: are we processing .ods or .xlsx?
+        print('Please provide an ods file to process.')
         sys.exit()
     input_file = sys.argv[1]
     if not os.path.exists(input_file):
-        print ('File not found.')
+        print('File not found.')
         sys.exit()
 
-    print ('Processing xlsx file: {}'.format(input_file))
+    print('Processing xlsx file: {}'.format(input_file))
     processExcel(xlrd.open_workbook(input_file))
