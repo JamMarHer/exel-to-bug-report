@@ -23,7 +23,7 @@ def processExcel(workbookInput):
 def reportBugs(formattedData):
     with open ('format', 'r') as f:
         # why _format?
-        _format = [l.strip() for l in f]
+        _format = [l.strip('\n') for l in f]
 
     for commit in formattedData:
         count = 0
@@ -39,7 +39,7 @@ def reportBugs(formattedData):
                     continue
 
                 # CT: why lineToWrite and line?
-                line = str('{} {}\n\n'.format(line, formattedData[commit][count]).replace('\n',''))
+                line = '{} {}\n\n'.format(line, formattedData[commit][count])
                 bugReport.write(line)
                 count += 1 # use enumerate?
 
