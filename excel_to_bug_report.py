@@ -19,10 +19,14 @@ def processExcel(workbookInput):
 
 
 def reportBugs(formattedData):
-    with open ('format', 'r') as input_format:
-        _format = input_format.readlines()
+    with open ('format', 'r') as f:
+        # why _format?
+        _format = f.readlines()
+
     for commit in formattedData:
         count = 0
+        # CT: what is [21][0:6]? The first 6 chars of the SHA?
+        # If so, why not commit[:6]?
         with open('bugs/{}.bug'.format(formattedData[commit][21][0:6]), 'w') as bugReport:
             for line in _format:
                 if 'bug:' in line:
@@ -36,7 +40,10 @@ def reportBugs(formattedData):
                 bugReport.write(lineToWrite)
                 bugReport.write('\n\n')
                 count += 1
+
+            # why? this is dead code
             count = 0
+
     print('Done.')
 
 
