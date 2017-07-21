@@ -104,7 +104,7 @@ def reportBugs(bugs):
             report = report.replace('__{}__'.format(k.upper()), v)
 
         # write to file
-        with open('bugs/{}.bug'.format(bug['hash'][:6]), 'w') as f:
+        with open('bugs/{}.bug'.format(bug['hash'][:7]), 'w') as f:
             f.write(report)
 
 
