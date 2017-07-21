@@ -3,6 +3,7 @@ import sys
 import os
 import xlrd
 import json
+import datetime
 
 kIndentLength = 2
 kIndent = {
@@ -28,6 +29,7 @@ kIndent = {
 
 def indent(s, size):
     indent = size * ' '
+    print(indent)
     return ''.join(indent+line for line in s.splitlines(True))
 
 
@@ -38,28 +40,41 @@ def processExcel(workbookInput):
     print('Columns: {}; Rows: {}'.format(numColumns, numRows))
 
     bugs = []
-    for row in range(numRows):
+    for row in range(1, numRows):
         bug = {
-            'title': sheet.cell_value(rowx=row, colx=1),
-            'description': sheet.cell_value(rowx=row, colx=2),
-            'classification': sheet.cell_value(rowx=row, colx=3),
-            'keywords': sheet.cell_value(rowx=row, colx=4),
-            'severity': sheet.cell_value(rowx=row, colx=5),
-            'links': sheet.cell_value(rowx=row, colx=6),
-            'phase': sheet.cell_value(rowx=row, colx=7),
-            'specificity': sheet.cell_value(rowx=row, colx=8),
-            'languages': sheet.cell_value(rowx=row, colx=9).split('\n'),
-            'detected_by': sheet.cell_value(rowx=row, colx=10),
-            'reported_by': sheet.cell_value(rowx=row, colx=11),
-            'issue': sheet.cell_value(rowx=row, colx=12),
-            'time_reported': sheet.cell_value(rowx=row, colx=13),
-            'hash': sheet.cell_value(rowx=row, colx=14),
-            'pull_request': sheet.cell_value(rowx=row, colx=15),
-            'files': sheet.cell_value(rowx=row, colx=16).split('\n'),
-            'time_fixed': sheet.cell_value(rowx=row, colx=17)
+            'ready': sheet.cell_value(rowx=row, colx=0),
+            'title': sheet.cell_value(rowx=row, colx=2),
+            'description': sheet.cell_value(rowx=row, colx=3),
+            'classification': sheet.cell_value(rowx=row, colx=4),
+            'keywords': sheet.cell_value(rowx=row, colx=5),
+            'severity': sheet.cell_value(rowx=row, colx=6),
+            'links': sheet.cell_value(rowx=row, colx=7),
+            'phase': sheet.cell_value(rowx=row, colx=8),
+            'specificity': sheet.cell_value(rowx=row, colx=9),
+            'languages': sheet.cell_value(rowx=row, colx=10).split('\n'),
+            'detected_by': sheet.cell_value(rowx=row, colx=11),
+            'reported_by': sheet.cell_value(rowx=row, colx=12),
+            'issue': sheet.cell_value(rowx=row, colx=13),
+            'time_reported': sheet.cell_value(rowx=row, colx=14),
+            'hash': sheet.cell_value(rowx=row, colx=15),
+            'pull_request': sheet.cell_value(rowx=row, colx=16),
+            'files': sheet.cell_value(rowx=row, colx=17).split('\n'),
+            'time_fixed': sheet.cell_value(rowx=row, colx=18)
         }
+
+        if isinstance(bug['time_reported'], float):
+            bug['time_reported'] = xlrd.xldate_as_tuple(bug['time_reported'], 0)
+            bug['time_reported'] = datetime.datetime(*bug['time_reported'])
+            bug['time_reported'] = bug['time_reported'].strftime('%d %B, %Y')
+
+        if isinstance(bug['time_fixed'], float):
+            bug['time_fixed'] = xlrd.xldate_as_tuple(bug['time_fixed'], 0)
+            bug['time_fixed'] = datetime.datetime(*bug['time_fixed'])
+            bug['time_fixed'] = bug['time_fixed'].strftime('%d %B, %Y')
+
         if bug['title'] != '':
             bugs.append(bug)
+
     reportBugs(bugs)
 
 
@@ -81,7 +96,9 @@ def reportBugs(bugs):
 
             report = report.replace('__{}__'.format(k.upper()), v)
 
-        print(report)
+        # write to file
+        with open('bugs/{}.bug'.format(bug['hash'][:6]), 'w') as f:
+            f.write(report)
 
 
 if __name__ == '__main__':
