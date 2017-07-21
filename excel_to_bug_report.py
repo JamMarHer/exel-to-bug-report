@@ -7,6 +7,7 @@ import datetime
 
 kIndentLength = 2
 kIndent = {
+    'ready': 0,
     'title': 0,
     'description': 1,
     'classification': 0,
@@ -61,6 +62,7 @@ def processExcel(workbookInput):
             'files': sheet.cell_value(rowx=row, colx=17).split('\n'),
             'time_fixed': sheet.cell_value(rowx=row, colx=18)
         }
+        bug['ready'] = bug['ready'] == 'Yes'
 
         if isinstance(bug['time_reported'], float):
             bug['time_reported'] = xlrd.xldate_as_tuple(bug['time_reported'], 0)
@@ -83,8 +85,13 @@ def reportBugs(bugs):
         template = f.read()
 
     for bug in bugs:
+        if not bug['ready']:
+            continue
+
         report = template
         for (k, v) in bug.items():
+            if k == 'ready':
+                continue
             if k == 'languages':
                 v = ','.join(v)
             elif k == 'files':
