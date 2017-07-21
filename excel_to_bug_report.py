@@ -9,21 +9,21 @@ def processExcel(workbookInput):
     numColumns = sheet.ncols
     numRows   = sheet.nrows
     print ('Columns: {}; Rows: {}'.format(numColumns, numRows))
-    formatedData = {}
+    formattedData = {}
     for row in range(numRows):
         commit = sheet.cell_value(rowx=row, colx=0)
-        formatedData[commit] = []
+        formattedData[commit] = []
         for col in range(1, numColumns):
-            formatedData[commit].append(sheet.cell_value(rowx=row, colx=col))
-    reportBugs(formatedData)
+            formattedData[commit].append(sheet.cell_value(rowx=row, colx=col))
+    reportBugs(formattedData)
 
 
-def reportBugs(formatedData):
+def reportBugs(formattedData):
     with open ('format', 'r') as input_format:
         _format = input_format.readlines()
-    for commit in formatedData:
+    for commit in formattedData:
         count = 0
-        with open('bugs/{}.bug'.format(formatedData[commit][21][0:6]), 'w') as bugReport:
+        with open('bugs/{}.bug'.format(formattedData[commit][21][0:6]), 'w') as bugReport:
             for line in _format:
                 if 'bug:' in line:
                     bugReport.write('bug: \n')
@@ -32,7 +32,7 @@ def reportBugs(formatedData):
                     bugReport.write('fix: \n')
                     continue
                 lineToWrite = line.replace('\n','') 
-                lineToWrite += str(' {}'.format(formatedData[commit][count]).replace('\n',''))
+                lineToWrite += str(' {}'.format(formattedData[commit][count]).replace('\n',''))
                 bugReport.write(lineToWrite)
                 bugReport.write('\n\n')
                 count += 1
