@@ -9,6 +9,8 @@ def processExcel(workbookInput):
     numColumns = sheet.ncols
     numRows   = sheet.nrows
     print('Columns: {}; Rows: {}'.format(numColumns, numRows))
+
+    # CT: why are we storing in a hash map based on the commit link?
     formattedData = {}
     for row in range(numRows):
         commit = sheet.cell_value(rowx=row, colx=0)
@@ -25,21 +27,21 @@ def reportBugs(formattedData):
 
     for commit in formattedData:
         count = 0
-        # CT: what is [21][0:6]? The first 6 chars of the SHA?
-        # If so, why not commit[:6]?
-        with open('bugs/{}.bug'.format(formattedData[commit][21][0:6]), 'w') as bugReport:
+        short_hash = formattedData[commit][21][0:6]
+        print(commit)
+        with open('bugs/{}.bug'.format(short_hash), 'w') as bugReport:
             for line in _format:
                 if 'bug:' in line:
-                    bugReport.write('bug: \n')
+                    bugReport.write('bug:\n')
                     continue
                 if 'fix:' in line:
-                    bugReport.write('fix: \n')
+                    bugReport.write('fix:\n')
                     continue
 
-                lineToWrite += str(' {}'.format(formattedData[commit][count]).replace('\n',''))
-                bugReport.write(lineToWrite)
-                bugReport.write('\n\n')
-                count += 1
+                # CT: why lineToWrite and line?
+                line = str('{} {}\n\n'.format(line, formattedData[commit][count]).replace('\n',''))
+                bugReport.write(line)
+                count += 1 # use enumerate?
 
             # why? this is dead code
             count = 0
