@@ -21,7 +21,7 @@ def processExcel(workbookInput):
 def reportBugs(formattedData):
     with open ('format', 'r') as f:
         # why _format?
-        _format = f.readlines()
+        _format = [l.strip() for l in f]
 
     for commit in formattedData:
         count = 0
@@ -35,7 +35,7 @@ def reportBugs(formattedData):
                 if 'fix:' in line:
                     bugReport.write('fix: \n')
                     continue
-                lineToWrite = line.replace('\n','') 
+
                 lineToWrite += str(' {}'.format(formattedData[commit][count]).replace('\n',''))
                 bugReport.write(lineToWrite)
                 bugReport.write('\n\n')
