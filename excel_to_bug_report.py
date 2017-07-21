@@ -23,7 +23,7 @@ def reportBugs(formatedData):
         _format = input_format.readlines()
     for commit in formatedData:
         count = 0
-        with open('bugs/{}.bug'.format(formatedData[commit][21][0:6]), 'a') as bugReport:
+        with open('bugs/{}.bug'.format(formatedData[commit][21][0:6]), 'w') as bugReport:
             for line in _format:
                 if 'bug:' in line:
                     bugReport.write('bug: \n')
