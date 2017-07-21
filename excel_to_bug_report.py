@@ -52,14 +52,14 @@ def processExcel(workbookInput):
             'links': sheet.cell_value(rowx=row, colx=7),
             'phase': sheet.cell_value(rowx=row, colx=8),
             'specificity': sheet.cell_value(rowx=row, colx=9),
-            'languages': sheet.cell_value(rowx=row, colx=10).split('\n'),
-            'detected_by': sheet.cell_value(rowx=row, colx=11),
-            'reported_by': sheet.cell_value(rowx=row, colx=12),
-            'issue': sheet.cell_value(rowx=row, colx=13),
-            'time_reported': sheet.cell_value(rowx=row, colx=14),
-            'hash': sheet.cell_value(rowx=row, colx=15),
-            'pull_request': sheet.cell_value(rowx=row, colx=16),
-            'files': sheet.cell_value(rowx=row, colx=17).split('\n'),
+            'detected_by': sheet.cell_value(rowx=row, colx=10),
+            'reported_by': sheet.cell_value(rowx=row, colx=11),
+            'issue': sheet.cell_value(rowx=row, colx=12),
+            'time_reported': sheet.cell_value(rowx=row, colx=13),
+            'hash': sheet.cell_value(rowx=row, colx=14),
+            'pull_request': sheet.cell_value(rowx=row, colx=15),
+            'files': sheet.cell_value(rowx=row, colx=16).split('\n'),
+            'languages': sheet.cell_value(rowx=row, colx=17).split('\n'),
             'time_fixed': sheet.cell_value(rowx=row, colx=18)
         }
         bug['ready'] = bug['ready'] == 'Yes'
@@ -95,7 +95,7 @@ def reportBugs(bugs):
             if k == 'languages':
                 v = ','.join(v)
             elif k == 'files':
-                v = '\n'.join(v)
+                v = '\n'.join(['- {}'.format(f) for f in v])
 
             # indent
             if kIndent[k] > 0:
