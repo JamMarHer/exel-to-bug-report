@@ -110,8 +110,7 @@ def reportBugs(bugs):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        # CT: are we processing .ods or .xlsx?
-        print('Please provide an ods file to process.')
+        print('Please provide a .xlsx file to process.')
         sys.exit()
     input_file = sys.argv[1]
     if not os.path.exists(input_file):
