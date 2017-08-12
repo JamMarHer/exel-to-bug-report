@@ -2,7 +2,7 @@
 import sys
 import os
 import xlrd
-import json
+import yaml
 import datetime
 
 kIndentLength = 2
