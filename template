@@ -1,38 +1,15 @@
-title: __TITLE__
-description:
+version: __VERSION__
+bug: __BUG__
+build-arguments:
+  fix_revision: __FIX_REVISION__
+dataset: __DATASET__
+program: __PROGRAM__
+dockerfile: __DOCKERFILE__
+file: __FILES__
 
-__DESCRIPTION__
-
-classification: __CLASSIFICATION__
-keywords: __KEYWORDS__
-severity: __SEVERITY__
-links:
-__LINKS__
-
-bug:
-
-  phase: __PHASE__
-  specificity: __SPECIFICITY__
-  architectural-location: N/A
-  application: N/A
-  task: N/A
-  subsystem: N/A
-  package: mavlink/mavros
-  languages: __LANGUAGES__
-  detected-by: __DETECTED_BY__
-  reported-by: __REPORTED_BY__
-  issue: __ISSUE__
-  time-reported: __TIME_REPORTED__
-  reproducibility: N/A
-  trace: N/A
-
-fix:
-
-  repo: https://github.com/mavlink/mavros
-  hash: __HASH__
-  pull-request: __PULL_REQUEST__
-  license: BSD, GPLv3, LGPLv3
-  fix-in:
-__FILES__
-  languages: __LANGUAGES__
-  time: __TIME_FIXED__
+extra:
+  system: __SYSTEM__
+bug-kind: __BUG-KIND__
+url: __URL__
+description: |
+  __DESCRIPTION__

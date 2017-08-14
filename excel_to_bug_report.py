@@ -2,35 +2,32 @@
 import sys
 import os
 import xlrd
-import yaml
 import datetime
 
 kIndentLength = 2
 kIndent = {
-    'ready': 0,
-    'title': 0,
-    'description': 1,
-    'classification': 0,
-    'keywords': 0,
-    'severity': 0,
-    'links': 1,
-    'phase': 0,
-    'specificity': 0,
-    'languages': 0,
-    'detected_by': 0,
-    'reported_by': 0,
-    'issue': 0,
-    'time_reported': 0,
-    'hash': 0,
-    'pull_request': 0,
-    'files': 2,
-    'time_fixed': 0
+    'version': 0,
+    'bug': 0,
+    'build-arguments': 0,
+    'fix_revision': 1,
+    'dataset': 0,
+    'program': 0,
+    'dockerfile': 0,
+    'files': 0,
+    'extra': 0,
+    'system': 1,
+    'bug-kind': 0,
+    'url': 0,
+    'description': 0,
 }
 
+VERSION = '0'
+DATASET = 'robots'
+PROGRAM = 'ardupilot'
+DOCKERFILE = 'Dockerfile.bug'
 
 def indent(s, size):
     indent = size * ' '
-    print(indent)
     return ''.join(indent+line for line in s.splitlines(True))
 
 
@@ -43,39 +40,21 @@ def processExcel(workbookInput):
     bugs = []
     for row in range(1, numRows):
         bug = {
-            'ready': sheet.cell_value(rowx=row, colx=0),
-            'title': sheet.cell_value(rowx=row, colx=2),
-            'description': sheet.cell_value(rowx=row, colx=3),
-            'classification': sheet.cell_value(rowx=row, colx=4),
-            'keywords': sheet.cell_value(rowx=row, colx=5),
-            'severity': sheet.cell_value(rowx=row, colx=6),
-            'links': sheet.cell_value(rowx=row, colx=7),
-            'phase': sheet.cell_value(rowx=row, colx=8),
-            'specificity': sheet.cell_value(rowx=row, colx=9),
-            'detected_by': sheet.cell_value(rowx=row, colx=10),
-            'reported_by': sheet.cell_value(rowx=row, colx=11),
-            'issue': sheet.cell_value(rowx=row, colx=12),
-            'time_reported': sheet.cell_value(rowx=row, colx=13),
-            'hash': sheet.cell_value(rowx=row, colx=14),
-            'pull_request': sheet.cell_value(rowx=row, colx=15),
-            'files': sheet.cell_value(rowx=row, colx=16).split('\n'),
-            'languages': sheet.cell_value(rowx=row, colx=17).split('\n'),
-            'time_fixed': sheet.cell_value(rowx=row, colx=18)
+            'version': VERSION,
+            'bug': sheet.cell_value(rowx=row, colx=6),
+            'build-arguments': '',
+            'fix_revision': sheet.cell_value(rowx=row, colx=6),
+            'dataset': DATASET,
+            'program': PROGRAM,
+            'dockerfile': DOCKERFILE,
+            'files': sheet.cell_value(rowx=row, colx=3),
+            'extra': '',
+            'system': sheet.cell_value(rowx=row, colx=4),
+            'bug-kind': sheet.cell_value(rowx=row, colx=5),
+            'url': sheet.cell_value(rowx=row, colx=2),
+            'description': sheet.cell_value(rowx=row, colx=1)
         }
-        bug['ready'] = bug['ready'] == 'Yes'
-
-        if isinstance(bug['time_reported'], float):
-            bug['time_reported'] = xlrd.xldate_as_tuple(bug['time_reported'], 0)
-            bug['time_reported'] = datetime.datetime(*bug['time_reported'])
-            bug['time_reported'] = bug['time_reported'].strftime('%d %B, %Y')
-
-        if isinstance(bug['time_fixed'], float):
-            bug['time_fixed'] = xlrd.xldate_as_tuple(bug['time_fixed'], 0)
-            bug['time_fixed'] = datetime.datetime(*bug['time_fixed'])
-            bug['time_fixed'] = bug['time_fixed'].strftime('%d %B, %Y')
-
-        if bug['title'] != '':
-            bugs.append(bug)
+        bugs.append(bug)
 
     reportBugs(bugs)
 
@@ -85,26 +64,21 @@ def reportBugs(bugs):
         template = f.read()
 
     for bug in bugs:
-        if not bug['ready']:
+        if bug['bug'] == 'OK':
             continue
 
         report = template
         for (k, v) in bug.items():
-            if k == 'ready':
-                continue
-            if k == 'languages':
-                v = ','.join(v)
-            elif k == 'files':
-                v = '\n'.join(['- {}'.format(f) for f in v])
+            if k == 'files':
+                v = '\n'.join(['- {}'.format(f) for f in v.split('\n')])
 
             # indent
             if kIndent[k] > 0:
                 v = indent(v, kIndent[k] * kIndentLength)
 
             report = report.replace('__{}__'.format(k.upper()), v)
-
         # write to file
-        with open('bugs/{}.bug'.format(bug['hash'][:7]), 'w') as f:
+        with open('bugs/{}.bug.yaml'.format(bug['bug']), 'w') as f:
             f.write(report)
 
 
